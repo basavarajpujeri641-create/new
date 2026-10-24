@@ -257,9 +257,6 @@ app.use("/api", (req, res, next) => {
 // Vercel serves public/ assets from its CDN; keep local static hosting for development.
 if (!isVercel) {
   app.use(express.static(PUBLIC_DIR));
-  app.get("/", (req, res) => {
-    res.sendFile(path.join(PUBLIC_DIR, "index.html"));
-  });
   app.use("/uploads", express.static(UPLOAD_DIR, {
     dotfiles: "deny",
     index: false,
@@ -268,6 +265,16 @@ if (!isVercel) {
     }
   }));
 }
+
+app.get("/", async (req, res, next) => {
+  try {
+    const index = await fs.promises.readFile(path.join(PUBLIC_DIR, "index.html"));
+    res.type("html").send(index);
+  } catch (error) {
+    console.error("Could not read the homepage file:", error);
+    next(error);
+  }
+});
 
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,

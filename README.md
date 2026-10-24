@@ -11,10 +11,10 @@ Blob store.
 3. Deploy this folder with the Vercel CLI (`npx vercel login`, then `npx vercel`)
    or import its Git repository into Vercel. Set the project root to this folder
    and allow Vercel to detect the Express framework (or choose **Express** if
-   prompted). Vercel detects the root `server.js` Express app and serves files
-   in `public/` from its CDN.
-4. Add these environment variables in the Vercel project settings for Production
-   (and Preview if needed):
+   prompted). Vercel detects the root `server.js` Express app; `vercel.json`
+   includes `public/` in the function bundle for the homepage route.
+4. Add these environment variables in **Vercel → Project → Settings →
+   Environment Variables** for Production (and Preview if needed):
    - `DATABASE_URL`: Neon connection string
    - `BLOB_READ_WRITE_TOKEN`: Vercel Blob read/write token
    - `ADMIN_USERNAME`: `skphotography`
@@ -24,7 +24,7 @@ Blob store.
    - `JWT_SECRET`: a random secret of at least 32 characters
    - Optional SMS password reset: `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, and
      either `TWILIO_PHONE_NUMBER` or `TWILIO_MESSAGING_SERVICE_SID`
-5. Deploy. Vercel runs the exported Express app as a function and serves the
+5. Redeploy after adding or changing environment variables. Vercel runs the exported Express app as a function and serves the
    files in `public/` as static assets. Database tables and the first admin
    account are initialized automatically on the first API request.
 6. Open the deployment URL and test a booking. Admin access is at

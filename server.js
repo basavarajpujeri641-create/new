@@ -19,18 +19,23 @@ const ADMIN_PHONE = process.env.ADMIN_PHONE || "";
 const isVercel = Boolean(process.env.VERCEL);
 const databaseUrl = process.env.DATABASE_URL;
 const sql = databaseUrl ? neon(databaseUrl) : null;
-const Database = sql ? null : require("better-sqlite3");
+const Database = !isVercel && !sql ? require("better-sqlite3") : null;
 
-if (!process.env.ADMIN_PASSWORD ||
-    process.env.ADMIN_PASSWORD.length < 12 ||
-    !process.env.JWT_SECRET ||
-    process.env.JWT_SECRET.length < 32 ||
-    process.env.JWT_SECRET === "replace_with_a_long_random_secret" ||
-    (ADMIN_PHONE && !/^\+[1-9]\d{7,14}$/.test(ADMIN_PHONE)) ||
-    (isVercel && (!databaseUrl || !process.env.BLOB_READ_WRITE_TOKEN))) {
-  throw new Error(
-    "Set ADMIN_PASSWORD (at least 12 characters), a random JWT_SECRET (at least 32 characters), DATABASE_URL, and BLOB_READ_WRITE_TOKEN on Vercel"
-  );
+function getConfigurationError() {
+  if (!process.env.ADMIN_PASSWORD || process.env.ADMIN_PASSWORD.length < 12) {
+    return "Set ADMIN_PASSWORD to a unique password of at least 12 characters.";
+  }
+  if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32 ||
+      process.env.JWT_SECRET === "replace_with_a_long_random_secret") {
+    return "Set JWT_SECRET to a random secret of at least 32 characters.";
+  }
+  if (ADMIN_PHONE && !/^\+[1-9]\d{7,14}$/.test(ADMIN_PHONE)) {
+    return "Set ADMIN_PHONE in international format.";
+  }
+  if (isVercel && !databaseUrl) {
+    return "Set DATABASE_URL to the Neon Postgres connection string in Vercel project settings.";
+  }
+  return "";
 }
 
 const ROOT = __dirname;
@@ -42,7 +47,9 @@ for (const dir of isVercel ? [] : [PUBLIC_DIR, DATA_DIR, UPLOAD_DIR]) {
   fs.mkdirSync(dir, { recursive: true });
 }
 
-const db = sql ? null : new Database(path.join(DATA_DIR, "skphotography.db"));
+const db = isVercel || sql
+  ? null
+  : new Database(path.join(DATA_DIR, "skphotography.db"));
 if (db) {
   db.pragma("journal_mode = WAL");
   db.pragma("foreign_keys = ON");
@@ -136,6 +143,13 @@ async function deleteLocalImageIfUnused(url) {
 
 let initialization;
 async function initializeDatabase() {
+  const configurationError = getConfigurationError();
+  if (configurationError) {
+    const error = new Error(configurationError);
+    error.code = "CONFIGURATION";
+    throw error;
+  }
+
   if (sql) {
     const statements = [
       `CREATE TABLE IF NOT EXISTS admins (
@@ -231,21 +245,29 @@ app.use(express.json({ limit: "50kb" }));
 app.use(express.urlencoded({ extended: false, limit: "20kb" }));
 
 app.use("/api", (req, res, next) => {
-  ensureInitialized().then(() => next()).catch(next);
+  ensureInitialized().then(() => next()).catch(error => {
+    if (error.code === "CONFIGURATION") {
+      return res.status(503).json({ error: error.message });
+    }
+    console.error("API database initialization failed:", error);
+    res.status(503).json({ error: "The database is unavailable. Check the server logs." });
+  });
 });
 
-// Serve your existing website and uploaded photographs.
-app.use(express.static(PUBLIC_DIR));
-app.get("/", (req, res) => {
-  res.sendFile(path.join(PUBLIC_DIR, "index.html"));
-});
-if (!isVercel) app.use("/uploads", express.static(UPLOAD_DIR, {
-  dotfiles: "deny",
-  index: false,
-  setHeaders(res) {
-    res.setHeader("X-Content-Type-Options", "nosniff");
-  }
-}));
+// Vercel serves public/ assets from its CDN; keep local static hosting for development.
+if (!isVercel) {
+  app.use(express.static(PUBLIC_DIR));
+  app.get("/", (req, res) => {
+    res.sendFile(path.join(PUBLIC_DIR, "index.html"));
+  });
+  app.use("/uploads", express.static(UPLOAD_DIR, {
+    dotfiles: "deny",
+    index: false,
+    setHeaders(res) {
+      res.setHeader("X-Content-Type-Options", "nosniff");
+    }
+  }));
+}
 
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,

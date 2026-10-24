@@ -660,7 +660,7 @@
           if (/^\s*(<!doctype\s+html|<html)/i.test(body)) {
             throw new Error("The site returned a webpage instead of an API response. Open the site from its Node/Vercel deployment, not Live Server or a static preview, and verify the API function is deployed.");
           }
-          throw new Error(`The server returned an unexpected response (${response.status}). Restart the Node server and try again.`);
+          throw new Error(`The server returned an unexpected response (${response.status}). Check the deployment/API server and try again.`);
         }
         return response.json();
       };
@@ -772,7 +772,11 @@
 
         if (migrated > 0) {
           document.getElementById("portfolioStatus").textContent =
-            `Migrated ${migrated} older browser photo${migrated === 1 ? "" : "s"} to online storage.`;
+            `Migrated ${migrated} older browser photo${migrated === 1 ? "" : "s"} to online storage.` +
+            (remaining.length ? ` ${remaining.length} photo${remaining.length === 1 ? " remains" : "s remain"} in this browser and may need to be uploaded manually.` : "");
+        } else if (remaining.length > 0) {
+          document.getElementById("portfolioStatus").textContent =
+            `${remaining.length} older browser photo${remaining.length === 1 ? " was" : "s were"} not migrated. Check that they use a supported image type and are no larger than 3 MB.`;
         }
       };
 

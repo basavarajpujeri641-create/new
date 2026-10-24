@@ -1,9 +1,3 @@
 {
-  "version": 2,
-  "functions": {
-    "api/[...path].js": {
-      "includeFiles": "public/**",
-      "maxDuration": 30
-    }
-  }
+  "version": 2
 }

@@ -81,6 +81,12 @@ async function migrate() {
     "SELECT id, title, category, filename, created_at FROM photos ORDER BY id"
   ).all();
   for (const photo of localPhotos) {
+    const existing = await sql.query(
+      "SELECT url FROM photos WHERE id = $1",
+      [photo.id]
+    );
+    if (existing[0]?.url) continue;
+
     const localFile = path.join(root, "uploads", path.basename(photo.filename));
     if (!fs.existsSync(localFile)) {
       throw new Error(`Photo file is missing; cannot migrate: ${localFile}`);

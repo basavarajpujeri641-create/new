@@ -790,8 +790,11 @@
             readApiResponse(photosResponse),
             readApiResponse(settingsResponse)
           ]);
-          if (!photosResponse.ok || !settingsResponse.ok) {
-            throw new Error("Could not load the online portfolio.");
+          if (!photosResponse.ok) {
+            throw new Error(savedPhotos.error || "Could not load portfolio photos.");
+          }
+          if (!settingsResponse.ok) {
+            throw new Error(settings.error || "Could not load website settings.");
           }
           photos = savedPhotos;
           portraitImageUrl = settings.portraitUrl || "";
@@ -978,7 +981,9 @@
           }
 
           form.reset();
-          status.textContent = "Booking request received. The photographer will contact you to confirm; this is not a confirmed booking yet.";
+          status.textContent = result.notificationSent
+            ? "Booking request saved and SMS sent to the photographer. The photographer will contact you to confirm; your booking is not confirmed yet."
+            : `${result.message || "Booking request saved."} ${result.notificationError || "Please contact the photographer directly to make sure they received it."}`;
         } catch (error) {
           console.error("Could not submit the booking request.", error);
           status.textContent = error.message || "Could not submit the booking request. Please try again.";

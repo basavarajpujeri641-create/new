@@ -16,13 +16,19 @@ Blob store.
 4. Add these environment variables in **Vercel → Project → Settings →
    Environment Variables** for Production (and Preview if needed):
    - `DATABASE_URL`: Neon connection string
-   - `BLOB_READ_WRITE_TOKEN`: Vercel Blob read/write token
+   - Connect a Vercel Blob store to the project for Production (and Preview if
+     needed). Vercel Blob uses its managed OIDC credentials; alternatively,
+     configure a `BLOB_READ_WRITE_TOKEN`.
    - `ADMIN_USERNAME`: `skphotography`
    - `ADMIN_PASSWORD`: a unique password of at least 12 characters
    - `ADMIN_PHONE`: admin mobile number in international format, for example
-     `+918296880354`
+     `+918217626808`
+   - `BOOKING_NOTIFICATION_PHONE`: photographer's number to notify for each
+     booking, in international format (defaults to `ADMIN_PHONE`), for example
+     `+918217626808`
    - `JWT_SECRET`: a random secret of at least 32 characters
-   - Optional SMS password reset: `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, and
+   - SMS notifications and password reset: `TWILIO_ACCOUNT_SID`,
+     `TWILIO_AUTH_TOKEN`, and
      either `TWILIO_PHONE_NUMBER` or `TWILIO_MESSAGING_SERVICE_SID`
 5. Redeploy after adding or changing environment variables. Vercel runs the exported Express app as a function and serves the
    files in `public/` as static assets. Database tables and the first admin
@@ -37,7 +43,8 @@ variable names and example values only.
 ## Migrate local data
 
 Run this once from this project folder after putting the target Neon URL and
-Blob token in your local ignored `.env` file:
+Blob credentials in your local ignored `.env` file. For OIDC credentials, use
+`vercel env pull` from the linked project:
 
 ```powershell
 npm run migrate:vercel
@@ -61,5 +68,5 @@ npm start
 ```
 
 Without `DATABASE_URL`, the app uses local SQLite and `uploads/`. With
-`DATABASE_URL`, it uses Neon. Photo uploads require `BLOB_READ_WRITE_TOKEN` when
-using Neon.
+`DATABASE_URL`, it uses Neon. Photo uploads with Neon need a connected Vercel
+Blob store (OIDC) or a `BLOB_READ_WRITE_TOKEN`.

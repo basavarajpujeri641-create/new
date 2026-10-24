@@ -9,8 +9,15 @@ const { put } = require("@vercel/blob");
 const root = path.join(__dirname, "..");
 const databaseUrl = process.env.DATABASE_URL;
 
-if (!databaseUrl || !process.env.BLOB_READ_WRITE_TOKEN) {
-  throw new Error("Set DATABASE_URL and BLOB_READ_WRITE_TOKEN before migration.");
+const hasBlobCredentials = Boolean(
+  process.env.BLOB_READ_WRITE_TOKEN ||
+  (process.env.BLOB_STORE_ID && process.env.VERCEL_OIDC_TOKEN)
+);
+
+if (!databaseUrl || !hasBlobCredentials) {
+  throw new Error(
+    "Set DATABASE_URL and connect a Vercel Blob store, or configure BLOB_READ_WRITE_TOKEN, before migration."
+  );
 }
 
 const sourcePath = path.join(root, "data", "skphotography.db");

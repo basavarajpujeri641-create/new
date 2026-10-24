@@ -16,10 +16,19 @@ const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME || "skphotography";
 const ADMIN_PHONE = process.env.ADMIN_PHONE || "";
+const BOOKING_NOTIFICATION_PHONE =
+  process.env.BOOKING_NOTIFICATION_PHONE || ADMIN_PHONE;
 const isVercel = Boolean(process.env.VERCEL);
 const databaseUrl = process.env.DATABASE_URL;
 const sql = databaseUrl ? neon(databaseUrl) : null;
 const Database = !isVercel && !sql ? require("better-sqlite3") : null;
+
+function hasBlobCredentials() {
+  return Boolean(
+    process.env.BLOB_READ_WRITE_TOKEN ||
+    (process.env.BLOB_STORE_ID && process.env.VERCEL_OIDC_TOKEN)
+  );
+}
 
 function getConfigurationError() {
   if (!process.env.ADMIN_PASSWORD || process.env.ADMIN_PASSWORD.length < 12) {
@@ -335,6 +344,48 @@ function cleanText(value, maxLength = 500) {
   return value.trim().slice(0, maxLength);
 }
 
+async function sendSms(to, body) {
+  const accountSid = process.env.TWILIO_ACCOUNT_SID;
+  const authToken = process.env.TWILIO_AUTH_TOKEN;
+  const fromNumber = process.env.TWILIO_PHONE_NUMBER;
+  const messagingServiceSid = process.env.TWILIO_MESSAGING_SERVICE_SID;
+
+  if (!to || !accountSid || !authToken ||
+      (!fromNumber && !messagingServiceSid)) {
+    return { sent: false, reason: "SMS notifications are not configured." };
+  }
+
+  const message = new URLSearchParams({ To: to, Body: body });
+  if (messagingServiceSid) {
+    message.set("MessagingServiceSid", messagingServiceSid);
+  } else {
+    message.set("From", fromNumber);
+  }
+
+  try {
+    const response = await fetch(
+      `https://api.twilio.com/2010-04-01/Accounts/${encodeURIComponent(accountSid)}/Messages.json`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Basic ${Buffer.from(`${accountSid}:${authToken}`).toString("base64")}`,
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: message
+      }
+    );
+    const responseBody = await response.text();
+    if (!response.ok) {
+      console.error("SMS delivery failed with status", response.status, responseBody);
+      return { sent: false, reason: "The SMS provider could not deliver the notification." };
+    }
+    return { sent: true };
+  } catch (error) {
+    console.error("SMS delivery failed.", error);
+    return { sent: false, reason: "The SMS provider could not be reached." };
+  }
+}
+
 // Health check
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok", website: "SK Photography" });
@@ -406,15 +457,9 @@ app.post("/api/admin/login", loginLimiter, async (req, res) => {
 });
 
 app.post("/api/admin/password-reset/request", passwordResetRequestLimiter, async (req, res) => {
-  const accountSid = process.env.TWILIO_ACCOUNT_SID;
-  const authToken = process.env.TWILIO_AUTH_TOKEN;
-  const fromNumber = process.env.TWILIO_PHONE_NUMBER;
-  const messagingServiceSid = process.env.TWILIO_MESSAGING_SERVICE_SID;
-
-  if (!ADMIN_PHONE || !accountSid || !authToken ||
-      (!fromNumber && !messagingServiceSid)) {
+  if (!ADMIN_PHONE) {
     return res.status(503).json({
-      error: "SMS password reset is not configured. Contact the site administrator."
+      error: "Set ADMIN_PHONE in international format to enable password reset."
     });
   }
 
@@ -424,39 +469,13 @@ app.post("/api/admin/password-reset/request", passwordResetRequestLimiter, async
     .digest("hex");
   const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
 
-  const message = new URLSearchParams({
-    To: ADMIN_PHONE,
-    Body: `Your SK Photography admin password reset code is ${code}. It expires in 10 minutes.`
-  });
-  if (messagingServiceSid) {
-    message.set("MessagingServiceSid", messagingServiceSid);
-  } else {
-    message.set("From", fromNumber);
-  }
-
-  try {
-    const response = await fetch(
-      `https://api.twilio.com/2010-04-01/Accounts/${encodeURIComponent(accountSid)}/Messages.json`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Basic ${Buffer.from(`${accountSid}:${authToken}`).toString("base64")}`,
-          "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: message
-      }
-    );
-    await response.text();
-    if (!response.ok) {
-      console.error("SMS password reset delivery failed with status", response.status);
-      return res.status(502).json({
-        error: "Could not send the reset code. Check the SMS provider configuration and try again."
-      });
-    }
-  } catch (error) {
-    console.error("SMS password reset delivery failed.", error);
+  const sms = await sendSms(
+    ADMIN_PHONE,
+    `Your SK Photography admin password reset code is ${code}. It expires in 10 minutes.`
+  );
+  if (!sms.sent) {
     return res.status(502).json({
-      error: "Could not send the reset code. Please try again later."
+      error: `Could not send the reset code. ${sms.reason}`
     });
   }
 
@@ -650,8 +669,10 @@ app.post(
     let imageUrl;
     try {
       if (sql) {
-        if (!process.env.BLOB_READ_WRITE_TOKEN) {
-          return res.status(503).json({ error: "Photo storage is not configured." });
+        if (!hasBlobCredentials()) {
+          return res.status(503).json({
+            error: "Photo storage is unavailable. Connect a Vercel Blob store to this project and enable it for this deployment environment, or configure BLOB_READ_WRITE_TOKEN."
+          });
         }
         const blob = await putBlob(`portfolio/${filename}`, req.file.buffer, {
           access: "public",
@@ -711,8 +732,10 @@ app.post(
     if (!isSupportedImage(req.file.buffer, req.file.mimetype)) {
       return res.status(400).json({ error: "The file does not contain a supported image." });
     }
-    if (sql && !process.env.BLOB_READ_WRITE_TOKEN) {
-      return res.status(503).json({ error: "Photo storage is not configured." });
+    if (sql && !hasBlobCredentials()) {
+      return res.status(503).json({
+        error: "Photo storage is unavailable. Connect a Vercel Blob store to this project and enable it for this deployment environment, or configure BLOB_READ_WRITE_TOKEN."
+      });
     }
 
     const filename = `portrait/${crypto.randomUUID()}${imageExtension(req.file.mimetype)}`;
@@ -880,9 +903,26 @@ app.post("/api/bookings", bookingLimiter, async (req, res) => {
     bookingId = result.lastInsertRowid;
   }
 
+  const sms = await sendSms(
+    BOOKING_NOTIFICATION_PHONE,
+    [
+      "New SK Photography booking request",
+      `Name: ${name}`,
+      `Customer mobile: ${phone}`,
+      `Service: ${service}`,
+      `Date: ${eventDate || "Not specified"}`,
+      `Details: ${message || "None"}`,
+      `Booking ID: ${bookingId}`
+    ].join("\n")
+  );
+
   res.status(201).json({
-    message: "Booking request received.",
-    bookingId
+    message: sms.sent
+      ? "Booking request received. The photographer was notified by SMS."
+      : "Booking request saved, but the photographer could not be notified by SMS.",
+    bookingId,
+    notificationSent: sms.sent,
+    notificationError: sms.sent ? undefined : sms.reason
   });
 });
 

@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#10100f">
+  <meta name="description" content="SK Photography by Sachin K — wedding, portrait, nature, event, travel, fashion and drone photography in Belagavi.">
+  <title>SK Photography | Sachin K</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #10100f;
+      --panel: #181816;
+      --panel-soft: #20201d;
+      --text: #f4f0e8;
+      --muted: #aaa69d;
+      --gold: #d6b878;
+      --gold-light: #ead5a5;
+      --line: rgba(255, 255, 255, .12);
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: Inter, "Segoe UI", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      line-height: 1.6;
+    }
+    body.modal-open { overflow: hidden; }
+    a { color: inherit; text-decoration: none; }
+    button, input, select, textarea { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button { color: inherit; }
+    .container { width: min(1160px, calc(100% - 48px)); margin: 0 auto; }
+    .eyebrow {
+      color: var(--gold);
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+    .section { padding: 100px 0; }
+    .section-heading { max-width: 640px; margin-bottom: 38px; }
+    h1, h2, h3, p { margin-top: 0; }
+    h2 {
+      margin-bottom: 14px;
+      font: 400 clamp(2.2rem, 4.5vw, 3.8rem)/1.08 var(--serif);
+      letter-spacing: -.035em;
+    }
+    .section-heading p, .muted { color: var(--muted); }
+
+    .topbar {
+      position: absolute;
+      z-index: 5;
+      top: 0;
+      left: 0;
+      width: 100%;
+      border-bottom: 1px solid rgba(255,255,255,.13);
+    }
+    .nav {
+      min-height: 82px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font: 600 1.15rem var(--serif);
+      letter-spacing: .04em;
+      white-space: nowrap;
+    }
+    .brand-mark {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font: 600 .88rem var(--serif);
+      letter-spacing: .04em;
+    }
+    .nav-links { display: flex; align-items: center; gap: 30px; }
+    .nav-links a:not(.button) { color: #e6e1d8; font-size: .86rem; }
+    .nav-links a:not(.button):hover { color: var(--gold-light); }
+    .button {
+      display: inline-flex;
+      min-height: 46px;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 0 20px;
+      border: 1px solid var(--gold);
+      background: var(--gold);
+      color: #181510;
+      font-size: .79rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background .2s, color .2s, border-color .2s;
+    }
+    .button:hover { background: var(--gold-light); border-color: var(--gold-light); }
+    .button-outline { background: transparent; color: var(--text); }
+    .button-outline:hover { color: #181510; }
+    .menu-toggle { display: none; border: 0; background: none; font-size: 1.5rem; cursor: pointer; }
+
+    .hero {
+      position: relative;
+      display: flex;
+      min-height: 730px;
+      align-items: center;
+      overflow: hidden;
+      background:
+        linear-gradient(90deg, rgba(10,10,9,.94) 0%, rgba(10,10,9,.76) 44%, rgba(10,10,9,.2) 100%),
+        linear-gradient(0deg, rgba(10,10,9,.78), transparent 45%),
+        url("https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=2200&q=85") center 43% / cover;
+    }
+    .hero::after {
+      position: absolute;
+      inset: 0;
+      border: 1px solid rgba(255,255,255,.04);
+      content: "";
+      pointer-events: none;
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 680px; padding-top: 60px; }
+    .hero h1 {
+      max-width: 670px;
+      margin: 20px 0 22px;
+      font: 400 clamp(3.5rem, 8vw, 7rem)/.99 var(--serif);
+      letter-spacing: -.055em;
+    }
+    .hero h1 em { color: var(--gold-light); font-weight: 400; }
+    .hero-content > p { max-width: 510px; color: #d0cbc1; font-size: 1.02rem; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+    .hero-note { margin-top: 66px; color: #d0cbc1; font-size: .77rem; letter-spacing: .1em; text-transform: uppercase; }
+    .hero-note span { margin: 0 10px; color: var(--gold); }
+
+    .intro-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 90px; align-items: center; }
+    .portrait-card {
+      position: relative;
+      min-height: 465px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 50% 35%, rgba(214,184,120,.2), transparent 45%),
+        linear-gradient(145deg, #32302a, #171715 70%);
+      border: 1px solid var(--line);
+    }
+    .portrait-card::before, .portrait-card::after {
+      position: absolute;
+      width: 68%;
+      height: 75%;
+      border: 1px solid rgba(214,184,120,.24);
+      content: "";
+    }
+    .portrait-card::after { width: 56%; height: 65%; border-color: rgba(255,255,255,.12); }
+    .portrait-initials { color: var(--gold); font: 400 5rem var(--serif); letter-spacing: -.08em; }
+    .portrait-card.portrait-photo::before, .portrait-card.portrait-photo::after { display: none; }
+    .portrait-card > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .portrait-caption { position: absolute; bottom: 22px; left: 24px; color: #d8d1c5; font-size: .75rem; letter-spacing: .15em; text-transform: uppercase; }
+    .intro-copy h2 { margin: 13px 0 22px; }
+    .intro-copy p { color: var(--muted); }
+    .signature { margin-top: 28px; color: var(--gold-light); font: italic 1.55rem var(--serif); }
+
+    .services { background: #151513; }
+    .service-grid { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+    .service-card { min-height: 190px; padding: 25px 24px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); transition: background .2s; }
+    .service-card:hover { background: #1d1d19; }
+    .service-number { color: var(--gold); font: 1rem var(--serif); }
+    .service-card h3 { margin: 34px 0 7px; font: 400 1.5rem var(--serif); }
+    .service-card p { margin: 0; color: var(--muted); font-size: .83rem; }
+
+    .gallery-header { display: flex; align-items: end; justify-content: space-between; gap: 24px; }
+    .gallery-header .section-heading { margin-bottom: 32px; }
+    .filter-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 32px; }
+    .filter-button {
+      padding: 8px 13px;
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--muted);
+      font-size: .75rem;
+      cursor: pointer;
+    }
+    .filter-button.active, .filter-button:hover { border-color: var(--gold); color: var(--gold-light); }
+    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .gallery-item { position: relative; min-height: 250px; overflow: hidden; background: var(--panel-soft); }
+    .gallery-item img { display: block; width: 100%; height: 100%; min-height: 250px; object-fit: cover; transition: transform .45s; }
+    .gallery-item:hover img { transform: scale(1.04); }
+    .gallery-overlay {
+      position: absolute;
+      inset: auto 0 0;
+      padding: 50px 18px 17px;
+      background: linear-gradient(transparent, rgba(0,0,0,.78));
+    }
+    .gallery-overlay h3 { margin: 0; font: 400 1.2rem var(--serif); }
+    .gallery-overlay span { color: var(--gold-light); font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; }
+    .empty-gallery {
+      grid-column: 1 / -1;
+      padding: 70px 24px;
+      border: 1px dashed rgba(214,184,120,.35);
+      color: var(--muted);
+      text-align: center;
+    }
+    .empty-gallery strong { display: block; margin-bottom: 9px; color: var(--text); font: 400 1.6rem var(--serif); }
+
+    .booking { background: #171715; }
+    .booking-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: 80px; align-items: start; }
+    .booking-copy p { color: var(--muted); }
+    .contact-line { display: flex; gap: 12px; margin-top: 22px; color: var(--gold-light); font-size: .92rem; }
+    .booking-form, .admin-form { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .field { display: grid; gap: 7px; }
+    .field-full { grid-column: 1 / -1; }
+    .field label { color: #d9d4ca; font-size: .76rem; }
+    .field input, .field select, .field textarea {
+      width: 100%;
+      min-height: 48px;
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 0;
+      outline: none;
+      background: #111110;
+      color: var(--text);
+    }
+    .field textarea { min-height: 105px; resize: vertical; }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--gold); }
+    .form-note { grid-column: 1 / -1; margin: -3px 0 0; color: var(--muted); font-size: .75rem; }
+    .booking-form .button { justify-self: start; }
+
+    .footer { padding: 32px 0; border-top: 1px solid var(--line); }
+    .footer-inner { display: flex; justify-content: space-between; gap: 18px; align-items: center; }
+    .footer p { margin: 0; color: var(--muted); font-size: .76rem; }
+    .footer-links { display: flex; gap: 18px; color: var(--muted); font-size: .8rem; }
+
+    .modal-backdrop {
+      position: fixed;
+      z-index: 20;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      overflow-y: auto;
+      padding: 24px;
+      background: rgba(0,0,0,.78);
+      backdrop-filter: blur(5px);
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      position: relative;
+      width: min(640px, 100%);
+      max-height: calc(100vh - 48px);
+      overflow-y: auto;
+      padding: 32px;
+      border: 1px solid rgba(214,184,120,.35);
+      background: #181816;
+      box-shadow: 0 24px 90px rgba(0,0,0,.45);
+    }
+    .modal-wide { width: min(900px, 100%); }
+    .modal h2 { margin: 10px 0 18px; font-size: 2.25rem; }
+    .modal-close {
+      position: absolute;
+      top: 13px;
+      right: 15px;
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--line);
+      background: transparent;
+      font-size: 1.3rem;
+      cursor: pointer;
+    }
+    .notice {
+      margin: 14px 0 20px;
+      padding: 12px 14px;
+      border-left: 2px solid var(--gold);
+      background: rgba(214,184,120,.08);
+      color: #d3c9b5;
+      font-size: .79rem;
+    }
+    .admin-form { margin-top: 18px; }
+    .admin-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 22px; }
+    .admin-toolbar h2 { margin: 0; }
+    .admin-actions { display: flex; flex-wrap: wrap; gap: 9px; }
+    .admin-actions .button { min-height: 40px; padding: 0 13px; font-size: .68rem; }
+    .admin-content { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+    .admin-panel { padding: 20px; border: 1px solid var(--line); }
+    .admin-panel h3 { margin-bottom: 16px; font: 400 1.35rem var(--serif); }
+    .admin-panel .field { margin-bottom: 13px; }
+    .bookings-panel { margin-bottom: 26px; }
+    .booking-list { display: grid; gap: 12px; }
+    .booking-entry { padding: 16px; border: 1px solid var(--line); background: var(--panel-soft); }
+    .booking-entry h4 { margin: 0 0 8px; font: 400 1.15rem var(--serif); }
+    .booking-entry p { margin: 4px 0; color: var(--muted); font-size: .82rem; overflow-wrap: anywhere; }
+    .booking-entry strong { color: var(--text); font-weight: 600; }
+    .booking-entry .booking-status { color: var(--gold-light); }
+    .booking-delete { min-height: 36px; margin-top: 12px; padding: 0 12px; border: 1px solid #9a4640; background: #792f2c; color: white; font-size: .72rem; cursor: pointer; }
+    .booking-delete:hover { background: #a6403b; }
+    .booking-delete:disabled { opacity: .6; cursor: wait; }
+    .portfolio-panel { grid-column: 1 / -1; }
+    .admin-photos { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 14px; }
+    .admin-photo { position: relative; min-height: 100px; background: var(--panel-soft); }
+    .admin-photo img { width: 100%; height: 140px; object-fit: cover; display: block; }
+    .admin-photo-details { padding: 10px; }
+    .admin-photo-title { margin: 0 0 3px; overflow-wrap: anywhere; font-size: .84rem; }
+    .admin-photo-category { margin: 0 0 10px; color: var(--muted); font-size: .72rem; }
+    .admin-photo .delete-photo { width: 100%; min-height: 36px; border: 1px solid #9a4640; background: #792f2c; color: white; font-size: .72rem; cursor: pointer; }
+    .admin-photo .delete-photo:hover { background: #a6403b; }
+    .admin-empty { color: var(--muted); font-size: .85rem; }
+    .status-message { min-height: 1.3em; color: var(--gold-light); font-size: .82rem; }
+    .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+    @media (max-width: 850px) {
+      .section { padding: 76px 0; }
+      .nav-links { gap: 17px; }
+      .nav-links a:not(.button) { font-size: .78rem; }
+      .intro-grid, .booking-grid { grid-template-columns: 1fr 1fr; gap: 38px; }
+      .service-grid { grid-template-columns: repeat(2, 1fr); }
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+      .portrait-card { min-height: 390px; }
+    }
+    @media (max-width: 640px) {
+      .container { width: min(100% - 36px, 520px); }
+      .topbar { background: rgba(16,16,15,.88); }
+      .nav { min-height: 70px; }
+      .menu-toggle { display: block; }
+      .nav-links {
+        position: absolute;
+        top: 69px;
+        right: 0;
+        left: 0;
+        display: none;
+        align-items: stretch;
+        padding: 18px;
+        border-bottom: 1px solid var(--line);
+        background: #151513;
+      }
+      .nav-links.open { display: flex; flex-direction: column; }
+      .nav-links a:not(.button) { padding: 5px 0; font-size: .9rem; }
+      .nav-links .button { align-self: flex-start; }
+      .hero { min-height: 690px; background-position: 59% center; }
+      .hero-content { padding-top: 75px; }
+      .hero h1 { font-size: clamp(3.5rem, 16vw, 5.2rem); }
+      .hero-note { margin-top: 48px; font-size: .65rem; }
+      .intro-grid, .booking-grid { grid-template-columns: 1fr; gap: 34px; }
+      .portrait-card { min-height: 350px; }
+      .service-grid { grid-template-columns: 1fr 1fr; }
+      .service-card { min-height: 160px; padding: 18px; }
+      .service-card h3 { margin-top: 23px; font-size: 1.25rem; }
+      .gallery-header { display: block; }
+      .gallery-grid { gap: 10px; }
+      .gallery-item, .gallery-item img { min-height: 180px; }
+      .gallery-overlay { padding: 36px 12px 12px; }
+      .gallery-overlay h3 { font-size: 1rem; }
+      .booking-form { grid-template-columns: 1fr; }
+      .field-full, .form-note { grid-column: auto; }
+      .footer-inner { align-items: flex-start; flex-direction: column; }
+      .modal { padding: 25px 19px; }
+      .admin-content { grid-template-columns: 1fr; }
+      .admin-form { grid-template-columns: 1fr; }
+      .admin-form .field-full { grid-column: auto; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <nav class="nav container" aria-label="Main navigation">
+      <a class="brand" href="#home" aria-label="SK Photography home">
+        <span class="brand-mark">SK</span><span>SK PHOTO AND FILM'S</span>
+      </a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false">☰</button>
+      <div class="nav-links" id="navLinks">
+        <a href="#about">About</a>
+        <a href="#services">Services</a>
+        <a href="#work">Portfolio</a>
+        <a href="#contact">Contact</a>
+        <a class="button" href="#contact">Book a session</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="container">
+        <div class="hero-content">
+          <span class="eyebrow">SK Photo and Film's · Belagavi, Karnataka</span>
+          <h1>Stories worth<br>remembering.<br><em>Frames worth feeling.</em></h1>
+          <p>We capture your precious and best moments with photography and films made to be remembered.</p>
+          <div class="hero-actions">
+            <a class="button" href="#work">Explore the work <span aria-hidden="true">↗</span></a>
+            <a class="button button-outline" href="#contact">Book your date</a>
+          </div>
+          <div class="hero-note">Weddings <span>✳</span> Portraits <span>✳</span> Life, beautifully captured</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="container intro-grid">
+        <div class="portrait-card" role="img" aria-label="SK Photography photographer portrait placeholder">
+          <span class="portrait-initials">SK</span>
+          <span class="portrait-caption">Behind the lens · Sachin K</span>
+        </div>
+        <div class="intro-copy">
+          <span class="eyebrow">A little about me</span>
+          <h2>Hi, I'm Sachin.<br>I make moments last.</h2>
+          <p>I'm Sachin K, the photographer behind SK Photography. I believe the best photographs feel like the moment itself—honest, full of life, and yours to keep.</p>
+          <p>From the quiet details of a wedding to the energy of a celebration, I bring a thoughtful eye and a personal touch to every shoot. Based near Ningammadevi Temple in Katakbhavi, I photograph stories across Belagavi and beyond.</p>
+          <a class="contact-line" href="https://www.instagram.com/sk_photography8296?dlrf=bnQwYmY4Nmt6MHlz" target="_blank" rel="noopener noreferrer">Follow along on Instagram <span aria-hidden="true">↗</span></a>
+          <div class="signature">Sachin K</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section services" id="services">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">Thank you for contacting SK Photo and Film's</span>
+          <h2>We capture your precious and best moments.</h2>
+          <p>From wedding celebrations and cinematic films to portraits, albums and little ones' milestones, find the right photography and videography service for your story.</p>
+        </div>
+        <div class="service-grid">
+          <article class="service-card"><span class="service-number">01</span><h3>Wedding</h3><p>Precious moments from your wedding day.</p></article>
+          <article class="service-card"><span class="service-number">02</span><h3>Pre / Post Wedding</h3><p>Celebrate your story before and after the big day.</p></article>
+          <article class="service-card"><span class="service-number">03</span><h3>Candid Photography</h3><p>Natural moments, captured as they happen.</p></article>
+          <article class="service-card"><span class="service-number">04</span><h3>Cinematic / Traditional Video</h3><p>Your celebration captured in film your way.</p></article>
+          <article class="service-card"><span class="service-number">05</span><h3>Album Making</h3><p>Beautifully printed memories to keep.</p></article>
+          <article class="service-card"><span class="service-number">06</span><h3>Studio / Outdoor Modeling Shoot</h3><p>Creative shoots in studio or outdoors.</p></article>
+          <article class="service-card"><span class="service-number">07</span><h3>Drone Shoot</h3><p>A striking perspective from above.</p></article>
+          <article class="service-card"><span class="service-number">08</span><h3>Baby Photoshoot</h3><p>Little details and big milestones, remembered.</p></article>
+          <article class="service-card"><span class="service-number">09</span><h3>Maternity Photoshoot</h3><p>Celebrate this special chapter of your life.</p></article>
+          <article class="service-card"><span class="service-number">10</span><h3>Baby Shoot</h3><p>Sweet portraits of your little one.</p></article>
+          <article class="service-card"><span class="service-number">11</span><h3>All Photography &amp; Videography</h3><p>Get in touch for any photography or video needs.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="work">
+      <div class="container">
+        <div class="gallery-header">
+          <div class="section-heading">
+            <span class="eyebrow">Selected work</span>
+            <h2>Photographs that feel like you.</h2>
+            <p>A growing collection of moments and stories. New photographs can be added by the studio admin.</p>
+          </div>
+        </div>
+        <div class="filter-list" id="galleryFilters" aria-label="Filter portfolio">
+          <button class="filter-button active" type="button" data-filter="All">All work</button>
+          <button class="filter-button" type="button" data-filter="Wedding">Wedding</button>
+          <button class="filter-button" type="button" data-filter="Pre/Post Wedding">Pre/Post Wedding</button>
+          <button class="filter-button" type="button" data-filter="Candid Photography">Candid Photography</button>
+          <button class="filter-button" type="button" data-filter="Cinematic / Traditional Video">Cinematic / Traditional Video</button>
+          <button class="filter-button" type="button" data-filter="Album Making">Album Making</button>
+          <button class="filter-button" type="button" data-filter="Studio / Outdoor Modeling Shoot">Studio / Outdoor Modeling Shoot</button>
+          <button class="filter-button" type="button" data-filter="Drone Shoot">Drone Shoot</button>
+          <button class="filter-button" type="button" data-filter="Baby Photoshoot">Baby Photoshoot</button>
+          <button class="filter-button" type="button" data-filter="Maternity Photoshoot">Maternity Photoshoot</button>
+          <button class="filter-button" type="button" data-filter="Baby Shoot">Baby Shoot</button>
+          <button class="filter-button" type="button" data-filter="All Type of Photography &amp; Videography">All Type of Photography &amp; Videography</button>
+        </div>
+        <div class="gallery-grid" id="galleryGrid" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section class="section booking" id="contact">
+      <div class="container booking-grid">
+        <div class="booking-copy">
+          <span class="eyebrow">Let's make a plan</span>
+          <h2>Tell me what you're dreaming up.</h2>
+          <p>Share a few details to submit a booking request. The photographer will contact you to confirm availability.</p>
+          <a class="contact-line" href="tel:+918296880354">Call: +91 82968 80354</a>
+          <div class="contact-line">Studio: Near Ningammadevi Temple, Katakbhavi,<br> Tq. Raibag, Dist. Belagavi</div>
+          <a class="contact-line" href="https://www.instagram.com/sk_photography8296?dlrf=bnQwYmY4Nmt6MHlz" target="_blank" rel="noopener noreferrer">@sk_photography8296 on Instagram ↗</a>
+        </div>
+        <form class="booking-form" id="bookingForm">
+          <div class="field"><label for="clientName">Your name *</label><input id="clientName" name="name" autocomplete="name" required placeholder="Name"></div>
+          <div class="field"><label for="clientPhone">Mobile number *</label><input id="clientPhone" name="phone" type="tel" autocomplete="tel" required pattern="[0-9+() -]{7,18}" placeholder="+91"></div>
+          <div class="field"><label for="eventType">Photography / videography service *</label>
+            <select id="eventType" name="event" required>
+              <option value="">Choose a service</option>
+              <option>Wedding</option><option>Pre/Post Wedding</option>
+              <option>Candid Photography</option><option>Cinematic / Traditional Video</option>
+              <option>Album Making</option><option>Studio / Outdoor Modeling Shoot</option>
+              <option>Drone Shoot</option><option>Baby Photoshoot</option>
+              <option>Maternity Photoshoot</option><option>Baby Shoot</option>
+              <option>All Type of Photography &amp; Videography</option><option>Other</option>
+            </select>
+          </div>
+          <div class="field"><label for="eventDate">Preferred date</label><input id="eventDate" name="date" type="date"></div>
+          <div class="field field-full"><label for="eventLocation">Event location</label><input id="eventLocation" name="location" placeholder="Where will it take place?"></div>
+          <div class="field field-full"><label for="eventMessage">A few more details</label><textarea id="eventMessage" name="message" placeholder="Tell me about your plans..."></textarea></div>
+          <p class="form-note status-message" id="bookingStatus" role="status" aria-live="polite">Submitting saves your request on this site. Your booking is not confirmed until the photographer contacts you.</p>
+          <button class="button" type="submit">Submit booking request</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> SK Photography · Sachin K · Belagavi, Karnataka</p>
+      <div class="footer-links">
+        <a href="https://www.instagram.com/sk_photography8296?dlrf=bnQwYmY4Nmt6MHlz" target="_blank" rel="noopener noreferrer">Instagram ↗</a>
+        <a href="tel:+918296880354">82968 80354</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="modal-backdrop" id="loginModal" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+    <div class="modal">
+      <button class="modal-close" type="button" data-close aria-label="Close">×</button>
+      <span class="eyebrow">Private area</span>
+      <h2 id="loginTitle">Studio admin</h2>
+      <p class="muted">Sign in to manage studio content and view booking requests.</p>
+      <div class="notice">Sign in with your studio admin credentials.</div>
+      <form id="loginForm">
+        <div class="field"><label for="adminUsername">Admin username</label><input id="adminUsername" name="username" required autocomplete="username" value="skphotography"></div>
+        <div class="field"><label for="adminPassword">Admin password</label><input id="adminPassword" type="password" required autocomplete="current-password"></div>
+        <p class="status-message" id="loginStatus" role="status"></p>
+        <button class="button" type="submit">Sign in</button>
+        <button class="button button-outline" type="button" id="resetPasswordOpen">Forgot password?</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="resetPasswordModal" role="dialog" aria-modal="true" aria-labelledby="resetPasswordTitle">
+    <div class="modal">
+      <button class="modal-close" type="button" data-close aria-label="Close">×</button>
+      <span class="eyebrow">Account recovery</span>
+      <h2 id="resetPasswordTitle">Reset admin password</h2>
+      <p class="muted">We’ll send a one-time code to the admin mobile number configured on the server. The code expires after 10 minutes.</p>
+      <button class="button button-outline" type="button" id="sendResetCode">Send SMS code</button>
+      <form id="resetPasswordForm" hidden>
+        <div class="field" style="margin-top:16px"><label for="resetCode">6-digit SMS code</label><input id="resetCode" name="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required></div>
+        <div class="field" style="margin-top:14px"><label for="resetNewPassword">New password (at least 12 characters)</label><input id="resetNewPassword" name="password" type="password" minlength="12" maxlength="200" autocomplete="new-password" required></div>
+        <button class="button" type="submit">Verify code and change password</button>
+      </form>
+      <p class="status-message" id="resetPasswordStatus" role="status" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="dashboardModal" role="dialog" aria-modal="true" aria-labelledby="dashboardTitle">
+    <div class="modal modal-wide">
+      <button class="modal-close" type="button" data-close aria-label="Close">×</button>
+      <div class="admin-toolbar">
+        <div><span class="eyebrow">Portfolio manager</span><h2 id="dashboardTitle">Studio dashboard</h2></div>
+        <div class="admin-actions">
+          <button class="button button-outline" type="button" id="logoutButton">Log out</button>
+        </div>
+      </div>
+      <div class="notice">Bookings, photos, and the About page portrait are saved to the studio’s online database and image storage.</div>
+      <section class="admin-panel bookings-panel" aria-labelledby="bookingRequestsTitle">
+        <div class="admin-toolbar">
+          <h3 id="bookingRequestsTitle">Booking requests</h3>
+          <button class="button button-outline" type="button" id="refreshBookings">Refresh requests</button>
+        </div>
+        <p class="status-message" id="bookingsStatus" role="status" aria-live="polite"></p>
+        <div class="booking-list" id="bookingList" aria-live="polite"></div>
+      </section>
+      <div class="admin-content">
+        <form class="admin-panel" id="portraitForm">
+          <h3>About page portrait</h3>
+          <p class="muted">Upload a headshot to show in the About section. This photo is separate from the public portfolio gallery.</p>
+          <div class="field"><label for="portraitFile">Choose portrait image *</label><input id="portraitFile" type="file" accept="image/*" required></div>
+          <p class="status-message" id="portraitStatus" role="status"></p>
+          <div class="admin-actions">
+            <button class="button" type="submit">Save portrait</button>
+            <button class="button button-outline" type="button" id="removePortrait">Remove portrait</button>
+          </div>
+        </form>
+        <form class="admin-panel" id="uploadForm">
+          <h3>Add a portfolio photo</h3>
+          <div class="field"><label for="photoFile">Choose image *</label><input id="photoFile" type="file" accept="image/*" required></div>
+          <div class="field"><label for="photoTitle">Photo title *</label><input id="photoTitle" required maxlength="70" placeholder="A day to remember"></div>
+          <div class="field"><label for="photoCategory">Category *</label>
+            <select id="photoCategory" required>
+              <option>Wedding</option>
+              <option>Pre/Post Wedding</option>
+              <option>Candid Photography</option>
+              <option>Cinematic / Traditional Video</option>
+              <option>Album Making</option>
+              <option>Studio / Outdoor Modeling Shoot</option>
+              <option>Drone Shoot</option>
+              <option>Baby Photoshoot</option>
+              <option>Maternity Photoshoot</option>
+              <option>Baby Shoot</option>
+              <option>All Type of Photography &amp; Videography</option>
+            </select>
+          </div>
+          <p class="status-message" id="uploadStatus" role="status"></p>
+          <button class="button" type="submit">Add photo to gallery</button>
+        </form>
+        <div class="admin-panel portfolio-panel" id="portfolioPanel">
+          <h3>Portfolio photos <span id="photoCount"></span></h3>
+          <p class="muted">These are the photos shown in the public portfolio. Delete a portfolio photo here; the separate About page portrait is managed above.</p>
+          <p class="status-message" id="portfolioStatus" role="status"></p>
+          <div class="admin-photos" id="adminPhotos"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const photosKey = "skPhotographyPortfolio";
+      const portraitKey = "skPhotographyPortraitId";
+      const portraitPhotoKey = "skPhotographyPortraitPhoto";
+      const categories = [
+        "Wedding",
+        "Pre/Post Wedding",
+        "Candid Photography",
+        "Cinematic / Traditional Video",
+        "Album Making",
+        "Studio / Outdoor Modeling Shoot",
+        "Drone Shoot",
+        "Baby Photoshoot",
+        "Maternity Photoshoot",
+        "Baby Shoot",
+        "All Type of Photography & Videography"
+      ];
+      const legacyCategoryMap = {
+        Portrait: "Studio / Outdoor Modeling Shoot",
+        Nature: "All Type of Photography & Videography",
+        Events: "All Type of Photography & Videography",
+        Travel: "All Type of Photography & Videography",
+        Fashion: "Studio / Outdoor Modeling Shoot",
+        Drone: "Drone Shoot"
+      };
+      let photos = [];
+      let activeFilter = "All";
+      let isLoggedIn = false;
+      let adminToken = "";
+      let portraitImageUrl = "";
+      let galleryError = "";
+
+      const setModal = (id, open) => {
+        document.getElementById(id).classList.toggle("open", open);
+        document.body.classList.toggle("modal-open", Boolean(document.querySelector(".modal-backdrop.open")));
+        if (open) {
+          const focusable = document.querySelector(`#${id} input, #${id} button`);
+          if (focusable) focusable.focus();
+        }
+      };
+
+      const readApiResponse = async response => {
+        const contentType = response.headers.get("content-type") || "";
+        if (!contentType.toLowerCase().includes("application/json")) {
+          const body = await response.text();
+          if (/^\s*(<!doctype\s+html|<html)/i.test(body)) {
+            throw new Error("The site returned a webpage instead of an API response. Open the site from its Node/Vercel deployment, not Live Server or a static preview, and verify the API function is deployed.");
+          }
+          throw new Error(`The server returned an unexpected response (${response.status}). Restart the Node server and try again.`);
+        }
+        return response.json();
+      };
+
+      const migrateBrowserPortfolio = async () => {
+        let legacyPhotos;
+        try {
+          legacyPhotos = JSON.parse(localStorage.getItem(photosKey) || "[]");
+        } catch (error) {
+          console.error("Could not read older browser portfolio data.", error);
+          document.getElementById("portfolioStatus").textContent = "Could not read older portfolio data from this browser.";
+          return;
+        }
+        if (!Array.isArray(legacyPhotos) || legacyPhotos.length === 0) return;
+
+        const remaining = [...legacyPhotos];
+        const migratedIds = new Map();
+        let migrated = 0;
+        for (const photo of legacyPhotos) {
+          const category = Object.prototype.hasOwnProperty.call(legacyCategoryMap, photo?.category)
+            ? legacyCategoryMap[photo.category]
+            : photo?.category;
+          if (!photo || typeof photo.id !== "string" ||
+              typeof photo.title !== "string" ||
+              !categories.includes(category) ||
+              typeof photo.image !== "string" ||
+              !photo.image.startsWith("data:image/")) continue;
+
+          try {
+            const image = await fetch(photo.image).then(response => response.blob());
+            if (image.size > 3 * 1024 * 1024) continue;
+            const extension = {
+              "image/jpeg": ".jpg",
+              "image/png": ".png",
+              "image/webp": ".webp",
+              "image/gif": ".gif"
+            }[image.type];
+            if (!extension) continue;
+
+            const formData = new FormData();
+            formData.append("photo", image, `legacy${extension}`);
+            formData.append("title", photo.title);
+            formData.append("category", category);
+            const response = await fetch("/api/admin/photos", {
+              method: "POST",
+              headers: { Authorization: `Bearer ${adminToken}` },
+              body: formData
+            });
+            const result = await readApiResponse(response);
+            if (!response.ok) throw new Error(result.error || "Could not migrate a browser photo.");
+
+            migratedIds.set(photo.id, result.id);
+            const index = remaining.findIndex(item => item?.id === photo.id);
+            if (index !== -1) remaining.splice(index, 1);
+            localStorage.setItem(photosKey, JSON.stringify(remaining));
+            migrated += 1;
+          } catch (error) {
+            console.error("Could not migrate an older browser photo.", error);
+            document.getElementById("portfolioStatus").textContent =
+              `Migrated ${migrated} older photo${migrated === 1 ? "" : "s"}; remaining photos could not be moved. ${error.message}`;
+            return;
+          }
+        }
+
+        try {
+          const selectedLegacyId = localStorage.getItem(portraitKey);
+          const selectedPhotoId = migratedIds.get(selectedLegacyId);
+          if (selectedPhotoId) {
+            const response = await fetch("/api/admin/portrait/select", {
+              method: "PUT",
+              headers: {
+                Authorization: `Bearer ${adminToken}`,
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({ photoId: selectedPhotoId })
+            });
+            const result = await readApiResponse(response);
+            if (!response.ok) throw new Error(result.error || "Could not migrate the About portrait.");
+            localStorage.removeItem(portraitKey);
+          }
+
+          const legacyPortrait = localStorage.getItem(portraitPhotoKey);
+          if (legacyPortrait?.startsWith("data:image/")) {
+            const image = await fetch(legacyPortrait).then(response => response.blob());
+            const extension = {
+              "image/jpeg": ".jpg",
+              "image/png": ".png",
+              "image/webp": ".webp",
+              "image/gif": ".gif"
+            }[image.type];
+            if (extension && image.size <= 3 * 1024 * 1024) {
+              const formData = new FormData();
+              formData.append("portrait", image, `legacy-portrait${extension}`);
+              const response = await fetch("/api/admin/portrait", {
+                method: "POST",
+                headers: { Authorization: `Bearer ${adminToken}` },
+                body: formData
+              });
+              const result = await readApiResponse(response);
+              if (!response.ok) throw new Error(result.error || "Could not migrate the About portrait.");
+              localStorage.removeItem(portraitPhotoKey);
+            }
+          }
+        } catch (error) {
+          console.error("Could not migrate the older About portrait.", error);
+          document.getElementById("portraitStatus").textContent =
+            `Portfolio photos migrated, but the older About portrait could not be moved. ${error.message}`;
+        }
+
+        if (migrated > 0) {
+          document.getElementById("portfolioStatus").textContent =
+            `Migrated ${migrated} older browser photo${migrated === 1 ? "" : "s"} to online storage.`;
+        }
+      };
+
+      const loadPortfolio = async () => {
+        try {
+          const [photosResponse, settingsResponse] = await Promise.all([
+            fetch("/api/photos"),
+            fetch("/api/settings")
+          ]);
+          const [savedPhotos, settings] = await Promise.all([
+            readApiResponse(photosResponse),
+            readApiResponse(settingsResponse)
+          ]);
+          if (!photosResponse.ok || !settingsResponse.ok) {
+            throw new Error("Could not load the online portfolio.");
+          }
+          photos = savedPhotos;
+          portraitImageUrl = settings.portraitUrl || "";
+          galleryError = "";
+          renderGallery();
+          renderPhotographerPortrait();
+          renderAdminPhotos();
+        } catch (error) {
+          galleryError = error.message || "Could not load the online portfolio.";
+          console.error("Could not load the online portfolio.", error);
+          renderGallery();
+        }
+      };
+
+      const renderGallery = () => {
+        const grid = document.getElementById("galleryGrid");
+        const visible = activeFilter === "All" ? photos : photos.filter(photo => photo.category === activeFilter);
+        grid.replaceChildren();
+        if (visible.length === 0) {
+          const empty = document.createElement("div");
+          empty.className = "empty-gallery";
+          const title = document.createElement("strong");
+          title.textContent = galleryError
+            ? "The portfolio could not be loaded."
+            : photos.length === 0 ? "The portfolio is ready for its first story." : "No photos in this collection yet.";
+          const description = document.createElement("span");
+          description.textContent = galleryError
+            ? galleryError
+            : photos.length === 0
+            ? "Check back soon for photographs by Sachin K."
+            : "Choose another category to explore the gallery.";
+          empty.append(title, description);
+          grid.append(empty);
+          return;
+        }
+
+        visible.forEach(photo => {
+          const card = document.createElement("article");
+          card.className = "gallery-item";
+          const image = document.createElement("img");
+          image.src = photo.image;
+          image.alt = photo.title;
+          image.loading = "lazy";
+          const overlay = document.createElement("div");
+          overlay.className = "gallery-overlay";
+          const category = document.createElement("span");
+          category.textContent = photo.category;
+          const title = document.createElement("h3");
+          title.textContent = photo.title;
+          overlay.append(category, title);
+          card.append(image, overlay);
+          grid.append(card);
+        });
+      };
+
+      const renderPhotographerPortrait = () => {
+        const card = document.querySelector(".portrait-card");
+        card.classList.toggle("portrait-photo", Boolean(portraitImageUrl));
+        const caption = document.createElement("span");
+        caption.className = "portrait-caption";
+        caption.textContent = "Behind the lens · Sachin K";
+        if (portraitImageUrl) {
+          const image = document.createElement("img");
+          image.src = portraitImageUrl;
+          image.alt = "Sachin K, photographer at SK Photography";
+          card.replaceChildren(image, caption);
+          return;
+        }
+        const initials = document.createElement("span");
+        initials.className = "portrait-initials";
+        initials.textContent = "SK";
+        card.replaceChildren(initials, caption);
+      };
+
+      const renderAdminPhotos = () => {
+        const list = document.getElementById("adminPhotos");
+        list.replaceChildren();
+        document.getElementById("photoCount").textContent = `(${photos.length})`;
+        if (photos.length === 0) {
+          const empty = document.createElement("p");
+          empty.className = "admin-empty";
+          empty.textContent = "No photos added yet.";
+          list.append(empty);
+          return;
+        }
+        photos.forEach(photo => {
+          const card = document.createElement("div");
+          card.className = "admin-photo";
+          const image = document.createElement("img");
+          image.src = photo.image;
+          image.alt = photo.title;
+          const details = document.createElement("div");
+          details.className = "admin-photo-details";
+          const title = document.createElement("h4");
+          title.className = "admin-photo-title";
+          title.textContent = photo.title;
+          const category = document.createElement("p");
+          category.className = "admin-photo-category";
+          category.textContent = photo.category;
+          details.append(title, category);
+          const remove = document.createElement("button");
+          remove.type = "button";
+          remove.className = "delete-photo";
+          remove.textContent = "Delete photo";
+          remove.setAttribute("aria-label", `Delete ${photo.title}`);
+          remove.addEventListener("click", async () => {
+            if (!window.confirm(`Delete "${photo.title}" from the portfolio?`)) return;
+            remove.disabled = true;
+            const status = document.getElementById("portfolioStatus");
+            try {
+              const response = await fetch(`/api/admin/photos/${photo.id}`, {
+                method: "DELETE",
+                headers: { Authorization: `Bearer ${adminToken}` }
+              });
+              const result = await readApiResponse(response);
+              if (!response.ok) throw new Error(result.error || "Could not delete the photo.");
+              await loadPortfolio();
+              document.getElementById("portfolioStatus").textContent = `"${photo.title}" deleted from the portfolio.`;
+            } catch (error) {
+              console.error("Could not delete portfolio photo.", error);
+              status.textContent = error.message || "Could not delete the photo. Please try again.";
+              remove.disabled = false;
+            }
+          });
+          card.append(image, details, remove);
+          list.append(card);
+        });
+      };
+
+      document.getElementById("year").textContent = new Date().getFullYear();
+      loadPortfolio();
+
+      document.getElementById("menuToggle").addEventListener("click", event => {
+        const links = document.getElementById("navLinks");
+        const open = links.classList.toggle("open");
+        event.currentTarget.setAttribute("aria-expanded", String(open));
+        event.currentTarget.setAttribute("aria-label", open ? "Close navigation" : "Open navigation");
+      });
+      document.querySelectorAll("#navLinks a").forEach(link => {
+        link.addEventListener("click", () => {
+          document.getElementById("navLinks").classList.remove("open");
+          document.getElementById("menuToggle").setAttribute("aria-expanded", "false");
+        });
+      });
+
+      document.getElementById("galleryFilters").addEventListener("click", event => {
+        const button = event.target.closest("[data-filter]");
+        if (!button) return;
+        activeFilter = button.dataset.filter;
+        document.querySelectorAll(".filter-button").forEach(filter =>
+          filter.classList.toggle("active", filter === button)
+        );
+        renderGallery();
+      });
+
+      document.getElementById("bookingForm").addEventListener("submit", async event => {
+        event.preventDefault();
+        const form = event.currentTarget;
+        const formData = new FormData(form);
+        const submitButton = form.querySelector('button[type="submit"]');
+        const status = document.getElementById("bookingStatus");
+        submitButton.disabled = true;
+        submitButton.textContent = "Submitting...";
+        status.textContent = "";
+
+        try {
+          const response = await fetch("/api/bookings", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name: formData.get("name"),
+              phone: formData.get("phone"),
+              service: formData.get("event"),
+              event_date: formData.get("date"),
+              message: [
+                formData.get("location") ? `Location: ${formData.get("location")}` : "",
+                formData.get("message")
+              ].filter(Boolean).join("\n")
+            })
+          });
+          const result = await readApiResponse(response);
+          if (!response.ok) {
+            throw new Error(result.error || "Could not submit the booking request.");
+          }
+
+          form.reset();
+          status.textContent = "Booking request received. The photographer will contact you to confirm; this is not a confirmed booking yet.";
+        } catch (error) {
+          console.error("Could not submit the booking request.", error);
+          status.textContent = error.message || "Could not submit the booking request. Please try again.";
+        } finally {
+          submitButton.disabled = false;
+          submitButton.textContent = "Submit booking request";
+        }
+      });
+
+      const openAdminLogin = () => {
+        document.getElementById("loginStatus").textContent = "";
+        document.getElementById("loginForm").reset();
+        document.getElementById("adminUsername").value = "skphotography";
+        setModal("loginModal", true);
+      };
+
+      const openAdminFromUrl = () => {
+        if (window.location.hash !== "#studio-admin") return;
+        window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+        openAdminLogin();
+      };
+
+      openAdminFromUrl();
+      window.addEventListener("hashchange", openAdminFromUrl);
+
+      document.getElementById("resetPasswordOpen").addEventListener("click", () => {
+        document.getElementById("resetPasswordStatus").textContent = "";
+        document.getElementById("resetPasswordForm").reset();
+        document.getElementById("resetPasswordForm").hidden = true;
+        document.getElementById("sendResetCode").disabled = false;
+        setModal("loginModal", false);
+        setModal("resetPasswordModal", true);
+      });
+
+      document.getElementById("sendResetCode").addEventListener("click", async event => {
+        const button = event.currentTarget;
+        const status = document.getElementById("resetPasswordStatus");
+        button.disabled = true;
+        status.textContent = "Sending SMS code...";
+        try {
+          const response = await fetch("/api/admin/password-reset/request", {
+            method: "POST"
+          });
+          const result = await readApiResponse(response);
+          if (!response.ok) {
+            throw new Error(result.error || "Could not send the SMS code.");
+          }
+          document.getElementById("resetPasswordForm").hidden = false;
+          status.textContent = result.message;
+        } catch (error) {
+          console.error("Could not request an admin password reset code.", error);
+          status.textContent = error.message || "Could not send the SMS code. Please try again.";
+          button.disabled = false;
+        }
+      });
+
+      document.getElementById("resetPasswordForm").addEventListener("submit", async event => {
+        event.preventDefault();
+        const form = event.currentTarget;
+        const submitButton = form.querySelector('button[type="submit"]');
+        const status = document.getElementById("resetPasswordStatus");
+        const formData = new FormData(form);
+        submitButton.disabled = true;
+        status.textContent = "Verifying code...";
+        try {
+          const response = await fetch("/api/admin/password-reset/verify", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              code: formData.get("code"),
+              password: formData.get("password")
+            })
+          });
+          const result = await readApiResponse(response);
+          if (!response.ok) {
+            throw new Error(result.error || "Could not reset the password.");
+          }
+          form.reset();
+          document.getElementById("loginStatus").textContent = result.message;
+          setModal("resetPasswordModal", false);
+          setModal("loginModal", true);
+        } catch (error) {
+          console.error("Could not verify the admin password reset code.", error);
+          status.textContent = error.message || "Could not reset the password. Please try again.";
+        } finally {
+          submitButton.disabled = false;
+        }
+      });
+
+      const renderBookings = bookings => {
+        const list = document.getElementById("bookingList");
+        list.replaceChildren();
+        if (bookings.length === 0) {
+          const empty = document.createElement("p");
+          empty.className = "admin-empty";
+          empty.textContent = "No booking requests yet.";
+          list.append(empty);
+          return;
+        }
+
+        bookings.forEach(booking => {
+          const entry = document.createElement("article");
+          entry.className = "booking-entry";
+          const title = document.createElement("h4");
+          title.textContent = `${booking.name} · ${booking.service}`;
+          const fields = [
+            ["Phone", booking.phone],
+            ["Preferred date", booking.event_date || "Not specified"],
+            ["Received", booking.created_at],
+            ["Status", booking.status],
+            ["Details", booking.message || "None"]
+          ];
+          entry.append(title);
+          fields.forEach(([label, value]) => {
+            const line = document.createElement("p");
+            if (label === "Status") line.className = "booking-status";
+            const name = document.createElement("strong");
+            name.textContent = `${label}: `;
+            line.append(name, document.createTextNode(value));
+            entry.append(line);
+          });
+          const remove = document.createElement("button");
+          remove.className = "booking-delete";
+          remove.type = "button";
+          remove.textContent = "Delete booking";
+          remove.setAttribute("aria-label", `Delete booking request from ${booking.name}`);
+          remove.addEventListener("click", async () => {
+            if (!window.confirm(`Delete the booking request from ${booking.name} for ${booking.service}? This cannot be undone.`)) return;
+            remove.disabled = true;
+            const status = document.getElementById("bookingsStatus");
+            status.textContent = "Deleting booking...";
+            try {
+              const response = await fetch(`/api/admin/bookings/${booking.id}`, {
+                method: "DELETE",
+                headers: { Authorization: `Bearer ${adminToken}` }
+              });
+              const result = await readApiResponse(response);
+              if (!response.ok) {
+                throw new Error(result.error || "Could not delete the booking.");
+              }
+              await loadBookings();
+            } catch (error) {
+              console.error("Could not delete booking request.", error);
+              status.textContent = error.message || "Could not delete the booking. Please try again.";
+              remove.disabled = false;
+            }
+          });
+          entry.append(remove);
+          list.append(entry);
+        });
+      };
+
+      const loadBookings = async () => {
+        const status = document.getElementById("bookingsStatus");
+        const button = document.getElementById("refreshBookings");
+        status.textContent = "Loading booking requests...";
+        button.disabled = true;
+        try {
+          const response = await fetch("/api/admin/bookings", {
+            headers: { Authorization: `Bearer ${adminToken}` }
+          });
+          const result = await readApiResponse(response);
+          if (!response.ok) {
+            throw new Error(result.error || "Could not load booking requests.");
+          }
+          renderBookings(result);
+          status.textContent = `${result.length} booking request${result.length === 1 ? "" : "s"}.`;
+        } catch (error) {
+          console.error("Could not load booking requests.", error);
+          status.textContent = error.message || "Could not load booking requests. Please try again.";
+        } finally {
+          button.disabled = false;
+        }
+      };
+
+      document.getElementById("refreshBookings").addEventListener("click", loadBookings);
+
+      document.getElementById("loginForm").addEventListener("submit", async event => {
+        event.preventDefault();
+        const form = event.currentTarget;
+        const submitButton = form.querySelector('button[type="submit"]');
+        const status = document.getElementById("loginStatus");
+        submitButton.disabled = true;
+        status.textContent = "Signing in...";
+        try {
+          const response = await fetch("/api/admin/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              username: document.getElementById("adminUsername").value,
+              password: document.getElementById("adminPassword").value
+            })
+          });
+          const result = await readApiResponse(response);
+          if (!response.ok) {
+            throw new Error(result.error || "Could not sign in.");
+          }
+          adminToken = result.token;
+          isLoggedIn = true;
+          setModal("loginModal", false);
+          setModal("dashboardModal", true);
+          await migrateBrowserPortfolio();
+          await loadPortfolio();
+          await loadBookings();
+        } catch (error) {
+          console.error("Admin sign-in failed.", error);
+          status.textContent = error.message || "Could not sign in. Please check your connection and try again.";
+        } finally {
+          submitButton.disabled = false;
+        }
+      });
+
+      document.getElementById("logoutButton").addEventListener("click", () => {
+        isLoggedIn = false;
+        adminToken = "";
+        setModal("dashboardModal", false);
+      });
+
+      document.getElementById("uploadForm").addEventListener("submit", async event => {
+        event.preventDefault();
+        if (!isLoggedIn) return;
+        const form = event.currentTarget;
+        const file = document.getElementById("photoFile").files[0];
+        const title = document.getElementById("photoTitle").value.trim();
+        const category = document.getElementById("photoCategory").value;
+        const status = document.getElementById("uploadStatus");
+        const submitButton = form.querySelector('button[type="submit"]');
+        if (!file || !title || !categories.includes(category)) return;
+        if (!file.type.startsWith("image/")) {
+          status.textContent = "Please choose a valid image file.";
+          return;
+        }
+        if (file.size > 3 * 1024 * 1024) {
+          status.textContent = "Please choose an image no larger than 3 MB.";
+          return;
+        }
+        const formData = new FormData();
+        formData.append("photo", file);
+        formData.append("title", title);
+        formData.append("category", category);
+        submitButton.disabled = true;
+        status.textContent = "Uploading photo...";
+        try {
+          const response = await fetch("/api/admin/photos", {
+            method: "POST",
+            headers: { Authorization: `Bearer ${adminToken}` },
+            body: formData
+          });
+          const result = await readApiResponse(response);
+          if (!response.ok) throw new Error(result.error || "Could not upload photo.");
+          form.reset();
+          await loadPortfolio();
+          status.textContent = "Photo added to the online gallery.";
+        } catch (error) {
+          console.error("Could not upload portfolio photo.", error);
+          status.textContent = error.message || "Could not upload the photo. Please try again.";
+        } finally {
+          submitButton.disabled = false;
+        }
+      });
+
+      document.getElementById("portraitForm").addEventListener("submit", async event => {
+        event.preventDefault();
+        if (!isLoggedIn) return;
+        const form = event.currentTarget;
+        const file = document.getElementById("portraitFile").files[0];
+        const status = document.getElementById("portraitStatus");
+        const submitButton = form.querySelector('button[type="submit"]');
+        if (!file) return;
+        if (!file.type.startsWith("image/")) {
+          status.textContent = "Please choose a valid image file.";
+          return;
+        }
+        if (file.size > 3 * 1024 * 1024) {
+          status.textContent = "Please choose an image no larger than 3 MB.";
+          return;
+        }
+        const formData = new FormData();
+        formData.append("portrait", file);
+        submitButton.disabled = true;
+        status.textContent = "Uploading portrait...";
+        try {
+          const response = await fetch("/api/admin/portrait", {
+            method: "POST",
+            headers: { Authorization: `Bearer ${adminToken}` },
+            body: formData
+          });
+          const result = await readApiResponse(response);
+          if (!response.ok) throw new Error(result.error || "Could not update portrait.");
+          form.reset();
+          await loadPortfolio();
+          status.textContent = "About page portrait updated.";
+        } catch (error) {
+          console.error("Could not update photographer portrait.", error);
+          status.textContent = error.message || "Could not save the portrait. Please try again.";
+        } finally {
+          submitButton.disabled = false;
+        }
+      });
+
+      document.getElementById("removePortrait").addEventListener("click", async () => {
+        if (!isLoggedIn) return;
+        try {
+          const response = await fetch("/api/admin/portrait", {
+            method: "DELETE",
+            headers: { Authorization: `Bearer ${adminToken}` }
+          });
+          const result = await readApiResponse(response);
+          if (!response.ok) throw new Error(result.error || "Could not remove portrait.");
+          await loadPortfolio();
+          document.getElementById("portraitStatus").textContent = "About page portrait removed.";
+        } catch (error) {
+          console.error("Could not remove the About page portrait.", error);
+          document.getElementById("portraitStatus").textContent = error.message || "Could not remove the portrait. Please try again.";
+        }
+      });
+
+      document.querySelectorAll("[data-close]").forEach(button => {
+        button.addEventListener("click", () => {
+          const backdrop = button.closest(".modal-backdrop");
+          if (backdrop.id === "dashboardModal") {
+            isLoggedIn = false;
+            adminToken = "";
+          }
+          setModal(backdrop.id, false);
+        });
+      });
+      document.querySelectorAll(".modal-backdrop").forEach(backdrop => {
+        backdrop.addEventListener("click", event => {
+          if (event.target === backdrop) {
+            if (backdrop.id === "dashboardModal") {
+              isLoggedIn = false;
+              adminToken = "";
+            }
+            setModal(backdrop.id, false);
+          }
+        });
+      });
+      document.addEventListener("keydown", event => {
+        if (event.key === "Escape") {
+          document.querySelectorAll(".modal-backdrop.open").forEach(backdrop => {
+            if (backdrop.id === "dashboardModal") {
+              isLoggedIn = false;
+              adminToken = "";
+            }
+            setModal(backdrop.id, false);
+          });
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
